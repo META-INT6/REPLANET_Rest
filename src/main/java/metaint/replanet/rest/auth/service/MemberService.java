@@ -31,4 +31,10 @@ public class MemberService {
         member.setPassword(passwordEncoder.encode((newPassword)));
         return MemberResponseDto.of(memberRepository.save(member));
     }
+
+    @Transactional
+    public boolean existsByEmail(String email) {
+        return memberRepository.existsByEmail(email);
+
+    }
 }

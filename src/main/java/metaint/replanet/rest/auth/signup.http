@@ -9,13 +9,22 @@
 #  "memberName": "김민주"
 #}
 
-GET https://kauth.kakao.com/oauth/authorize?client_id=5a90ac83e3e59ba52ef0c472bc65e3e0&redirect_uri=http://localhost:8001/login/oauth2/code/kakao&response_type=code
-// 로그인
-POST http://localhost:8001/auth/login
+//로그인
+#POST http://localhost:8001/auth/login
+#Content-Type: application/json
+#
+#{
+#  "email": "admin",
+#  "password": "1234"
+#}
+
+GET http://localhost:8001/users/sms
 Content-Type: application/json
 
 {
-  "email": "admin",
-  "password": "1234"
+  "to": "u_phone",
+  "from": "01046668627",
+  "type": "SMS",
+  "text": "cerNum",
+  "app_version": "1"
 }
-

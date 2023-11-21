@@ -20,4 +20,16 @@ public class MemberController {
         return ResponseEntity.ok(memberService.changeMemberPassword(request.getExPassword(), request.getNewPassword()));
     }
 
+
+    @GetMapping("/emailcheck")
+    public ResponseEntity<?> checkEmailDuplication(@RequestParam(value = "member_email") String email) throws Exception {
+        System.out.println(email);
+
+        if (memberService.existsByEmail(email) == true) {
+            throw new Exception("이미 사용중인 이메일입니다.");
+        } else {
+            return ResponseEntity.ok("사용 가능한 이메일입니다.");
+        }
+    }
+
 }

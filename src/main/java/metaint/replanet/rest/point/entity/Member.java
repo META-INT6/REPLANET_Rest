@@ -58,4 +58,8 @@ public class Member {
     public Member builder(){
         return new Member(memberCode, memberEmail, memberName, password, phone, joinDate, memberRole, withdraw, withdrawDate, currentPoint);
     }
+
+    public Member(int memberCode) {
+        this.memberCode = memberCode;
+    }
 }

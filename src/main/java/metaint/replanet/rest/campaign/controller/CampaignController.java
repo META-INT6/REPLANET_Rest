@@ -161,12 +161,7 @@ public class CampaignController {
         return campaignService.getTodayDonations();
     }
 
-    // 북마크 등록
-    @PostMapping("bookmarks")
-    public boolean addBookmark(@PathVariable int campaignCode){
-        System.out.println(campaignCode +"들어너?" );
-        return true;
-    }
+
 
 
 

@@ -2,16 +2,21 @@ package metaint.replanet.rest.auth.sms.controller;
 
 import metaint.replanet.rest.auth.sms.service.SmsService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Random;
 
+@RestController
+@RequestMapping("/")
 public class SmsController {
     private SmsService smsService;
+    String resultStr="";
 
-    @GetMapping("/sendSMS")
+    @GetMapping("/users/sms")
     public String sendSMS (@RequestParam String u_phone) {
+
         Random rnd  = new Random();
         StringBuffer buffer = new StringBuffer();
         for (int i=0; i<4; i++) {
@@ -20,7 +25,7 @@ public class SmsController {
         String cerNum = buffer.toString();
         System.out.println("수신자 번호 : " + u_phone);
         System.out.println("인증번호 : " + cerNum);
-        smsService.certifiedPhoneNumber(u_phone, cerNum);
+        smsService.smsService(u_phone, cerNum);
         return cerNum;
     }
 

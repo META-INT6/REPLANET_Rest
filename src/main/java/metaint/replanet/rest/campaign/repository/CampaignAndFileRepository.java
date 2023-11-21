@@ -14,7 +14,7 @@ public interface CampaignAndFileRepository extends JpaRepository<CampaignAndFile
 
     List<CampaignAndFile> findByEndDateBefore(LocalDateTime currentDate);
 
-    @Query(value = "SELECT *  FROM  tbl_campaign_description d  RIGHT JOIN  tbl_campaign_desc_file cf on d.campaign_code = cf.campaign_code WHERE d.end_date > now() "
-           ,nativeQuery = true)
-    List<CampaignAndFile> findByEndDateAfter1(LocalDateTime currentDate);
+//    @Query(value = "SELECT *  FROM  tbl_campaign_description d  RIGHT JOIN  tbl_campaign_desc_file cf on d.campaign_code = cf.campaign_code WHERE d.end_date > now() "
+//           ,nativeQuery = true)
+//    List<CampaignAndFile> findByEndDateAfter1(LocalDateTime currentDate);
 }

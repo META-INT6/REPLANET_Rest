@@ -47,6 +47,10 @@ public class CampaignDescription {
 
     protected CampaignDescription() {}
 
+    public CampaignDescription(int campaignCode) {
+        this.campaignCode = campaignCode;
+    }
+
     public CampaignDescription(String campaignTitle, String campaignContent, LocalDateTime startDate, LocalDateTime endDate, String campaignCategory, int currentBudget, int goalBudget, String orgName, String orgDescription, String orgTel) {
         this.campaignTitle = campaignTitle;
         this.campaignContent = campaignContent;
