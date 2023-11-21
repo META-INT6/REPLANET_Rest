@@ -72,7 +72,7 @@ public class ChartService {
 
         return resultList.stream()
                 .map(row -> {
-                    String monthly = (String) row[0];
+                    int monthly = ((Number) row[0]).intValue();
                     int campaigns = ((Number) row[1]).intValue();
                     int sumCurrentBudget = ((Number) row[2]).intValue();
                     int sumGoalBudget = ((Number) row[3]).intValue();
@@ -95,7 +95,7 @@ public class ChartService {
 
         return resultList.stream()
                 .map(row -> {
-                    String monthly = (String) row[0];
+                    int monthly = ((Number) row[0]).intValue();
                     int campaigns = ((Number) row[1]).intValue();
                     int sumCurrentBudget = ((Number) row[2]).intValue();
                     int sumGoalBudget = ((Number) row[3]).intValue();
