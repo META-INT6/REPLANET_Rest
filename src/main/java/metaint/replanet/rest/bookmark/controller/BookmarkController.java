@@ -7,10 +7,12 @@ import metaint.replanet.rest.bookmark.entity.Bookmark;
 import metaint.replanet.rest.bookmark.service.BookmarkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Array;
 import java.util.List;
 
 @CrossOrigin("http://localhost:3000")
@@ -27,16 +29,15 @@ public class BookmarkController {
 
     //북마크 전체조회
     @GetMapping("bookmarks")
-    public List<Bookmark> getBookmarkListByMember(@RequestBody BookmarkDTO bookmarkDTO
+    public List<Bookmark> getBookmarkListByMember(@RequestParam String memberCode
             /*@RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader*/){
 //        System.out.println(authorizationHeader + "헤더");
 //
 //        String token = extractToken(authorizationHeader);
 //        Authentication authentication = tokenProvider.getAuthentication(token);
 //        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String memberCode = "1";
 
-        System.out.println(bookmarkDTO+"멤코코");
+        System.out.println(memberCode+"멤코코");
 
 
 
@@ -66,7 +67,14 @@ public class BookmarkController {
         System.out.println(memberCode +"들어너?" +campaignCode);
         boolean check = bookmarkService.deleteBookmark(memberCode,campaignCode);
         System.out.println(check+ "체크좀22");
-        return true;
+        return check;
+    }
+
+    // 북마크 전체 삭제
+    @PutMapping("AllBookmarks")
+    public ResponseEntity<String> deleteBookmarks(@RequestBody List<Long> bookmarkCode){
+        System.out.println(bookmarkCode +"들어너?" );
+        return null;
     }
 
 

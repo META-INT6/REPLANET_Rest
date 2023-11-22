@@ -8,11 +8,13 @@ import metaint.replanet.rest.util.FileUploadUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -375,5 +377,29 @@ public class ReviewService {
     public List<Campaign> findUnassociatedCampaigns() {
 
         return campaignReviewRepository.findUnassociatedCampaigns();
+    }
+
+    public String uploadImage(MultipartFile file) {
+
+        try {
+            // Validate the file if needed
+            log.info("my file>?!!?: " + file);
+            if (file.isEmpty()) {
+                log.info("NO file");
+            }
+
+            // Specify the destination folder
+            String filePath = "/Users/babyybiss/Documents/FullStackJava/REPLANET_React/public/reviewImgs/" + file.getOriginalFilename();
+
+            // Save the file
+            file.transferTo(new File(filePath));
+
+            // Respond with the file path or any other relevant information
+            log.info("File uploaded successfully. Path: " + filePath);
+            return file.getOriginalFilename();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Internal Server Error";
+        }
     }
 }

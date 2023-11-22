@@ -1,19 +1,18 @@
 package metaint.replanet.rest.reviews.model.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import metaint.replanet.rest.auth.jwt.TokenProvider;
 import metaint.replanet.rest.reviews.dto.*;
 import metaint.replanet.rest.reviews.entity.Campaign;
-import metaint.replanet.rest.reviews.entity.ReviewComment;
 import metaint.replanet.rest.reviews.model.service.ReviewService;
-import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -209,6 +208,51 @@ public class ReviewController {
 
         return ResponseEntity.ok(unassociatedCampaigns);
     }
+
+/*    @PostMapping("/imageUpload")
+    public ResponseEntity<String> handleImageUpload(@RequestParam("imageFile") MultipartFile file) {
+
+        log.info("what is the imageFile : " + file);
+
+        String data = reviewService.uploadImage(file);
+        log.info("wtf is this : " + ResponseEntity.ok(data));
+        log.info("wtf is this : " + data);
+        return ResponseEntity.ok(data);
+
+    }*/
+
+    @PostMapping("/imageUpload")
+    public ResponseEntity<String> handleImageUpload(@RequestParam("file") MultipartFile file) {
+        try {
+            log.info("[Review controller] image? : "+file);
+            String imageUrl = reviewService.uploadImage(file);
+
+            // Create a success response
+            ImageUploadResponse response = new ImageUploadResponse(imageUrl, true);
+
+            // Convert the response to JSON
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonResponse = objectMapper.writeValueAsString(response);
+
+            return ResponseEntity.ok("{ 'location' : '/reviewImgs/image.png' }");
+            //return ResponseEntity.ok(jsonResponse);
+        } catch (Exception e) {
+            // Create a failure response
+            ImageUploadResponse response = new ImageUploadResponse(false, e.getMessage());
+
+            // Convert the response to JSON
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonResponse;
+            try {
+                jsonResponse = objectMapper.writeValueAsString(response);
+            } catch (JsonProcessingException jsonProcessingException) {
+                jsonResponse = "{\"status\":false,\"message\":\"Error processing response\"}";
+            }
+
+            return ResponseEntity.ok("{ 'location' : '/reviewImgs/image.png' }");
+        }
+    }
+
 
 
 }

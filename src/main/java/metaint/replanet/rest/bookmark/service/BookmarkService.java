@@ -44,10 +44,7 @@ public class BookmarkService {
     public List<Bookmark> getBookmarkListByMember(String memberCode) {
         int changeCode = Integer.parseInt(memberCode);
 
-        System.out.println(changeCode + "이거도 안되나");
-
         List<Bookmark> bookmark = bookmarkRepository.findByMemberCodeMemberCode(changeCode);
-        System.out.println(bookmark);
 
         return bookmark;
     }
@@ -60,7 +57,6 @@ public class BookmarkService {
 
         Member member = new Member(mCode);
         CampaignDescription campaignDescription = new CampaignDescription(cCode);
-
 
         System.out.println(member + " 멤버" + campaignDescription + "캠펜");
         //int changeCode = Integer.parseInt(memberCode);
