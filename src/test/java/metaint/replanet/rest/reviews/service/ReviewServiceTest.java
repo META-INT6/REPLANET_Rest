@@ -101,7 +101,7 @@ public class ReviewServiceTest {
                 "Some image data".getBytes()
         );
 
-        Long reviewCode = reviewRepository.findByCampaignCode(reviewDTO.getCampaignCode());
+        //Long reviewCode = reviewRepository.findByCampaignCode(reviewDTO.getCampaignCode());
 
         // When
         Review insertReview = modelMapper.map(reviewDTO, Review.class);
@@ -119,7 +119,7 @@ public class ReviewServiceTest {
         reviewFileDTO.setFileSaveName(replaceFileName);
         reviewFileDTO.setFileSavePath("http://localhost:3000" + "somePath" + "/" + imageFile.getOriginalFilename());
         reviewFileDTO.setFileExtension("PNG");
-        reviewFileDTO.setReviewCode(reviewCode);
+        //reviewFileDTO.setReviewCode(reviewCode);
         reviewFileDTO.setFileOriginName(imageFile.getOriginalFilename());
         reviewFileDTO.setFileOriginPath("somePath");
 

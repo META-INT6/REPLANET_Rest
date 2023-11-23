@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
@@ -62,5 +63,21 @@ public class BookmarkServiceTest {
 
     }
 
-    
+    @DisplayName("북마크 전체 삭제 테스트")
+    @Test
+    void deleteAllBookmarkTest(){
+        //given
+        List<Integer> cam = new ArrayList<>();
+        cam.add(666);
+        cam.add(677);
+        //when
+        bookmarkService.bookmarkDeleteAll(cam);
+        //then
+        Assertions.assertDoesNotThrow(
+                () -> bookmarkService.bookmarkDeleteAll(cam)
+        );
+
+    }
+
+
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Array;
 import java.util.List;
+import java.util.Objects;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
@@ -29,35 +30,14 @@ public class BookmarkController {
 
     //북마크 전체조회
     @GetMapping("bookmarks")
-    public List<Bookmark> getBookmarkListByMember(@RequestParam String memberCode
-            /*@RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader*/){
-//        System.out.println(authorizationHeader + "헤더");
-//
-//        String token = extractToken(authorizationHeader);
-//        Authentication authentication = tokenProvider.getAuthentication(token);
-//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-        System.out.println(memberCode+"멤코코");
-
-
-
+    public List<Bookmark> getBookmarkListByMember(@RequestParam String memberCode){
         return bookmarkService.getBookmarkListByMember(memberCode);
-    }
-
-    private String extractToken(String authorizationHeader) {
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            System.out.println("이게안되는듯");
-            return authorizationHeader.substring(7);
-        }
-        return null;
     }
 
     // 북마크 등록
     @PostMapping("bookmarks")
     public boolean addBookmark(@RequestBody BookmarkDTO bookmarkDTO){
-        System.out.println(bookmarkDTO +"들어너?" );
         boolean check = bookmarkService.addBookmark(bookmarkDTO);
-        System.out.println(check+ "체크좀");
         return check;
     }
 
@@ -72,11 +52,9 @@ public class BookmarkController {
 
     // 북마크 전체 삭제
     @PutMapping("AllBookmarks")
-    public ResponseEntity<String> deleteBookmarks(@RequestBody List<Long> bookmarkCode){
+    public ResponseEntity<String> deleteBookmarks(@RequestBody List<Integer> bookmarkCode){
         System.out.println(bookmarkCode +"들어너?" );
+        bookmarkService.bookmarkDeleteAll(bookmarkCode);
         return null;
     }
-
-
-
 }

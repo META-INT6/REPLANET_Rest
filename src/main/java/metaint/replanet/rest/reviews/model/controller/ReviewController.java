@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import static java.lang.Long.parseLong;
@@ -224,18 +225,20 @@ public class ReviewController {
     @PostMapping("/imageUpload")
     public ResponseEntity<String> handleImageUpload(@RequestParam("file") MultipartFile file) {
         try {
-            log.info("[Review controller] image? : "+file);
+            log.info("[Review controller] image? : " + file);
             String imageUrl = reviewService.uploadImage(file);
 
             // Create a success response
-            ImageUploadResponse response = new ImageUploadResponse(imageUrl, true);
+          //  ImageUploadResponse response = new ImageUploadResponse(imageUrl, true);
 
             // Convert the response to JSON
             ObjectMapper objectMapper = new ObjectMapper();
-            String jsonResponse = objectMapper.writeValueAsString(response);
+           // String jsonResponse = objectMapper.writeValueAsString(response);
+            log.info("whats the resposne?: " + imageUrl);
+            // Return the JSON response with the random file name
+            return ResponseEntity.ok("{\"imageUrl\": \"/reviewImgs/" + imageUrl + "\"}");
 
-            return ResponseEntity.ok("{ 'location' : '/reviewImgs/image.png' }");
-            //return ResponseEntity.ok(jsonResponse);
+
         } catch (Exception e) {
             // Create a failure response
             ImageUploadResponse response = new ImageUploadResponse(false, e.getMessage());
@@ -249,7 +252,8 @@ public class ReviewController {
                 jsonResponse = "{\"status\":false,\"message\":\"Error processing response\"}";
             }
 
-            return ResponseEntity.ok("{ 'location' : '/reviewImgs/image.png' }");
+            // Return the JSON response with the random file name
+            return ResponseEntity.ok(jsonResponse);
         }
     }
 

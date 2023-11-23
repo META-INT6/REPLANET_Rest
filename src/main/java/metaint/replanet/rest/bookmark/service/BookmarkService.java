@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class BookmarkService {
@@ -69,6 +70,20 @@ public class BookmarkService {
         }
         return result > 0 ? false : true;
     }
+
+    // 북마크 전체삭제
+    @Transactional
+    public Boolean bookmarkDeleteAll(List<Integer> campaignCode) {
+        int result = 0;
+        try {
+            result = bookmarkRepository.deleteAllByIds(campaignCode);
+            System.out.println(result+ "이게 안되나?");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result > 0 ? false : true;
+    }
+
 
 }
 
