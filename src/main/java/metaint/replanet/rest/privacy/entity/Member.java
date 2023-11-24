@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Getter
 @ToString
-@Entity(name = "PointMember")
+@Entity(name = "privacyMember")
 @Table(name = "tbl_member")
 public class Member {
 
@@ -55,4 +55,18 @@ public class Member {
 
     @Column(name = "resident_num")
     private String residentNum;
+
+    public Member infoConsent(char val){
+        this.infoConsent = val;
+        return this;
+    }
+
+    public Member residentNum(String val){
+        this.residentNum = val;
+        return this;
+    }
+
+    public Member builder(){
+        return new Member(memberCode, memberEmail, memberName, password, phone, joinDate, memberRole, withdraw, withdrawDate, currentPoint, infoConsent, residentNum);
+    }
 }
