@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import lombok.Setter;
 
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,14 +42,26 @@ public class PayController {
     public void kakaoPayGet() {}
 
     @PostMapping("/kakaoPay/{campaignCode}")
-    public String kakaoPay(@RequestBody DonationAmountDTO amount,
-                           @PathVariable String campaignCode,
-                           @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public ResponseEntity<String> kakaoPay(@RequestBody DonationAmountDTO amount,
+                                           @PathVariable String campaignCode,
+                                           @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         log.info("[POST /kakaoPay/{campaignCode}] -------------------------------------");
         log.info("[/kakaoPay/{campaignCode} cashAmount] : " + amount.getCashAmount());
         log.info("[/kakaoPay/{campaignCode} pointAmount] : " + amount.getPointAmount());
         log.info("[/kakaoPay/{campaignCode} finalAmount] : " + amount.getFinalAmount());
         log.info("[/kakaoPay/{campaignCode} campaign] : " + campaignCode);
+
+        if (amount.getPointAmount() < 0 || amount.getFinalAmount()< 0 || amount.getCashAmount() < 0) {
+            // 받아온 amount 값에 대한 유효성 체크
+            log.info("[/kakaoPay/{campaignCode} 유효하지 않은 amount] : " + amount);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid amount");
+        }
+
+        if (Integer.parseInt(campaignCode) < 0) {
+            // 받아온 campaignCode 값에 대한 유효성 체크
+            log.info("[/kakaoPay/{campaignCode} 유효하지 않은 campaignCode] : " + campaignCode);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid campaignCode");
+        }
 
         String token = extractToken(authorizationHeader);
         Authentication authentication = tokenProvider.getAuthentication(token);
@@ -57,18 +71,34 @@ public class PayController {
 
         String redirectUrl = payService.kakaoPayReady(amount, campaignCode, memberCode);
 
-        return "redirect:" + redirectUrl;
+        return ResponseEntity.status(HttpStatus.OK).body(redirectUrl);
     }
 
     @PostMapping("/pointDonation/{campaignCode}")
-    public ResponseEntity<Map<String, Integer>> pointDonation(@RequestBody DonationAmountDTO amount,
+    public ResponseEntity<Map<String, Object>> pointDonation(@RequestBody DonationAmountDTO amount,
                                                               @PathVariable String campaignCode,
                                                               @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         log.info("[POST /pointDonation/{campaignCode}] -------------------------------------");
-        log.info("[/pointDonation/{campaignCode} cashAmount] : " + amount.getCashAmount()); // 0일거임
+        log.info("[/pointDonation/{campaignCode} cashAmount] : " + amount.getCashAmount());
         log.info("[/pointDonation/{campaignCode} pointAmount] : " + amount.getPointAmount());
         log.info("[/pointDonation/{campaignCode} finalAmount] : " + amount.getFinalAmount());
         log.info("[/pointDonation/{campaignCode} campaignCode] : " + campaignCode);
+
+        if (amount.getPointAmount() < 0 || amount.getFinalAmount()< 0 || amount.getCashAmount() < 0) {
+            // 받아온 amount 값에 대한 유효성 체크
+            log.info("[/pointDonation/{campaignCode} 유효하지 않은 amount] : " + amount);
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "유효하지 않은 amount");
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+
+        if (Integer.parseInt(campaignCode) < 0) {
+            // 받아온 campaignCode 값에 대한 유효성 체크
+            log.info("[/pointDonation/{campaignCode} 유효하지 않은 campaignCode] : " + campaignCode);
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "유효하지 않은 campaignCode");
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
 
         String token = extractToken(authorizationHeader);
         Authentication authentication = tokenProvider.getAuthentication(token);
@@ -79,7 +109,7 @@ public class PayController {
         int payCode = payService.postPointDonation(amount, campaignCode, memberCode);
         log.info("[GET /pointDonation/{campaignCode} payCode] : " + payCode);
 
-        Map<String, Integer> response = new HashMap<>();
+        Map<String, Object> response = new HashMap<>();
         response.put("payCode", payCode);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -96,6 +126,35 @@ public class PayController {
         log.info("[GET /kakaoPaySuccess pointAmount] : " + pointAmount);
         log.info("[GET /kakaoPaySuccess campaignCode] : " + campaignCode);
 
+        if (pointAmount == null || campaignCode == null || memberCode == null) {
+            log.error("[GET /kakaoPaySuccess] 유효하지 않은 요청입니다. (null 값)");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
+        try {
+            int pointAmountValue = Integer.parseInt(pointAmount);
+
+            // pointAmount가 음수인지 체크
+            if (pointAmountValue < 0) {
+                log.error("[GET /kakaoPaySuccess] 유효하지 않은 요청입니다. (pointAmount 음수)");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                return;
+            }
+
+            // campaignCode가 음수인지 체크
+            int campaignCodeValue = Integer.parseInt(campaignCode);
+            if (campaignCodeValue < 0) {
+                log.error("[GET /kakaoPaySuccess] 유효하지 않은 요청입니다. (campaignCode 음수)");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                return;
+            }
+        } catch (NumberFormatException e) {
+            log.error("[GET /kakaoPaySuccess] 유효하지 않은 요청입니다. (pointAmount or campaignCode 문자열)");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
         KakaoPayApprovalVO info = payService.kakaoPayInfo(pg_token, pointAmount, campaignCode, memberCode);
 
         log.info("[GET /kakaoPaySuccess] info.getPayCode() : " + info.getPayCode());
@@ -107,6 +166,27 @@ public class PayController {
     @GetMapping("/kakaoPayCancle")
     public void kakaoPayCancel(HttpServletResponse response, @RequestParam("campaignCode") String campaignCode) {
         log.info("[GET /kakaoPayCancle]-------------------------------------");
+
+        if (campaignCode == null) {
+            log.error("[GET /kakaoPayCancel] 유효하지 않은 요청입니다. (null 값)");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
+        try {
+            // campaignCode가 음수인지 체크
+            int campaignCodeValue = Integer.parseInt(campaignCode);
+            if (campaignCodeValue < 0) {
+                log.error("[GET /kakaoPayCancel] 유효하지 않은 요청입니다. (campaignCode 음수)");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                return;
+            }
+        } catch (NumberFormatException e) {
+            log.error("[GET /kakaoPayCancel] 유효하지 않은 요청입니다. (campaignCode 문자열)");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
         response.setStatus(HttpServletResponse.SC_FOUND);
         response.setHeader("Location", "http://localhost:3000/campaign/" + campaignCode + "/donations/cancel");
     }
@@ -114,6 +194,26 @@ public class PayController {
     @GetMapping("/kakaoPaySuccessFail")
     public void kakaoPaySuccessFail(HttpServletResponse response, @RequestParam("campaignCode") String campaignCode) {
         log.info("[GET /kakaoPaySuccessFail]-------------------------------------");
+
+        if (campaignCode == null) {
+            log.error("[GET /kakaoPayCancel] 유효하지 않은 요청입니다. (null 값)");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
+        try {
+            int campaignCodeValue = Integer.parseInt(campaignCode);
+            if (campaignCodeValue < 0) {
+                log.error("[GET /kakaoPayCancel] 유효하지 않은 요청입니다. (campaignCode 음수)");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                return;
+            }
+        } catch (NumberFormatException e) {
+            log.error("[GET /kakaoPayCancel] 유효하지 않은 요청입니다. (campaignCode 문자열)");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
         response.setStatus(HttpServletResponse.SC_FOUND);
         response.setHeader("Location", "http://localhost:3000/campaign/" + campaignCode + "/donations/fail");
     }
@@ -127,6 +227,13 @@ public class PayController {
         log.info("[GET /paysByMemberWithDate startDate] : " + startDate);
         log.info("[GET /paysByMemberWithDate endDate] : " + endDate);
 
+        if (startDate != null && endDate != null) {
+            if (!isValidDateFormat(startDate) || !isValidDateFormat(endDate)) {
+                log.error("Invalid date format");
+                return ResponseEntity.badRequest().build();
+            }
+        }
+
         String token = extractToken(authorizationHeader);
         Authentication authentication = tokenProvider.getAuthentication(token);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
@@ -136,6 +243,10 @@ public class PayController {
         List<Pay> payList;
 
         if (startDate != null && endDate != null) {
+            if (!isValidDateRange(startDate, endDate)) {
+                log.error("날짜 범위 유효하지 않음");
+                return ResponseEntity.badRequest().build();
+            }
             payList = payService.getPaysByDateRange(startDate, endDate, memberCode);
         } else {
             payList = payService.getPaysByMember(memberCode);
@@ -209,6 +320,25 @@ public class PayController {
         }
         log.info("[extractToken()] 토큰 추출 실패 ");
         return null;
+    }
+
+    private boolean isValidDateFormat(String date) {
+        return date.matches("\\d{4}-\\d{2}-\\d{2}");
+    }
+
+    private boolean isValidDateRange(String startDate, String endDate) {
+        try {
+            LocalDate start = LocalDate.parse(startDate);
+            LocalDate end = LocalDate.parse(endDate);
+
+            if (start.isAfter(end)) {
+                return false;
+            }
+
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
     }
 
 }

@@ -131,7 +131,7 @@ public class CampaignController {
         LocalDateTime currentDate = LocalDateTime.now();
 
         System.out.println(currentBudget);
-        if ((currentBudget > 0) && (endDate.isAfter(currentDate))) {
+        if ((currentBudget > 0) || (endDate.isBefore(currentDate))) {
             System.out.println("모금액 있어서 수정 안됨");
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("모금액 있거나 마감일이 지나서 수정 안됨");
         } else {
@@ -144,7 +144,6 @@ public class CampaignController {
                 return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("10억 이상은 좀.. ");
             }
             if (imageFile != null) {
-                System.out.println("이거 언제?");
                 campaignService.registImage(imageFile, campaignCode);
 
             }

@@ -10,8 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface PayMemberRepository extends JpaRepository<Member, Long> {
     Member findByMemberCode(Long memberId);
 
-    @Transactional
     @Modifying
-    @Query("UPDATE Member m SET m.currentPoint = :updatedPoint WHERE m.id = :memberCode")
+    @Query("UPDATE pay_member m SET m.currentPoint = :updatedPoint WHERE m.memberCode = :memberCode")
     void updateCurrentPointByMemberCode(@Param("updatedPoint") int updatedPoint, @Param("memberCode") Long memberCode);
 }

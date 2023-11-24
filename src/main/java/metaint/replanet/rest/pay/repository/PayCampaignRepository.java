@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface PayCampaignRepository extends JpaRepository<CampaignDescription, Integer> {
 
     @Modifying
-    @Transactional
     @Query("UPDATE pay_campaign_description c SET c.currentBudget = c.currentBudget + (:donationPoint + :payAmount) WHERE c.campaignCode = :campaignCode")
     void updateCurrentBudget(@Param("donationPoint") int donationPoint, @Param("payAmount") int payAmount, @Param("campaignCode") int campaignCode);
 }

@@ -21,6 +21,6 @@ public class MemberDTO {
     private char withdraw;
     private Date withdrawDate;
     private int currentPoint;
-    private char infoConsent;
+    private char privacyStatus;
     private String residentNum;
 }

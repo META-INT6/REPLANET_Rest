@@ -35,6 +35,7 @@ CREATE TABLE `tbl_campaign_description`
     `org_tel`    VARCHAR(255) NOT NULL COMMENT '단체연락처',
     PRIMARY KEY ( `campaign_code` )
 ) COMMENT = '캠페인상세내용';
+# 단체명, 단체소개, 단체연락처 추후 삭제 예정
 
 
 CREATE TABLE `tbl_campaign_desc_file`
@@ -115,9 +116,11 @@ CREATE TABLE `tbl_member`
     `withdraw`    CHAR DEFAULT 'N' NOT NULL COMMENT '탈퇴여부',
     `withdraw_date`    DATETIME DEFAULT null COMMENT '탈퇴일자',
     `current_point`    INTEGER DEFAULT 0 NOT NULL COMMENT '보유포인트',
+    `privacy_status`    CHAR DEFAULT 'N' NOT NULL COMMENT '개인정보동의여부',
+    `resident_num`    VARCHAR(255) COMMENT '주민등록번호',
  PRIMARY KEY ( `member_code` )
 ) COMMENT = '회원정보';
-
+# 개인정보동의여부, 주민등록번호 추가됨 231124
 
 
 CREATE TABLE `tbl_pay`
@@ -183,7 +186,36 @@ CREATE TABLE `tbl_refresh_token`
  PRIMARY KEY ( `rt_key` )
 ) COMMENT = '리프레시토큰';
 
+CREATE TABLE `tbl_org`
+(
+    `org_code`    INTEGER NOT NULL AUTO_INCREMENT COMMENT '기부처코드',
+    `org_id`    VARCHAR(255) NOT NULL COMMENT '기부처아이디',
+    `org_password`    VARCHAR(255) NOT NULL COMMENT '기부처비밀번호',
+    `org_name`    VARCHAR(255) NOT NULL COMMENT '기부처명',
+    `org_tel`    VARCHAR(255) COMMENT '기부처연락처',
+    `org_description`    VARCHAR(1000) COMMENT '기부처소개',
+    `join_date`    DATETIME NOT NULL COMMENT '등록일자',
+    `withdraw_date`    DATETIME COMMENT '탈퇴일자',
+    `member_role`    VARCHAR(255) DEFAULT 'ROLE_ORG' NOT NULL COMMENT '유저권한',
+    PRIMARY KEY ( `org_code` )
+) COMMENT = '기부처정보';
+
+CREATE TABLE `tbl_org_file`
+(
+    `org_file_code`    INTEGER NOT NULL AUTO_INCREMENT COMMENT '기부처첨부파일코드',
+    `file_origin_name`    VARCHAR(255) NOT NULL COMMENT '원본파일명',
+    `file_save_name`    VARCHAR(255) NOT NULL COMMENT '저장파일명',
+    `file_save_path`    VARCHAR(255) NOT NULL COMMENT '파일확장자',
+    `file_extension`    VARCHAR(255) NOT NULL COMMENT '저장경로',
+    `org_code`    INTEGER NOT NULL COMMENT '기부처코드',
+    PRIMARY KEY (`org_file_code`)
+) COMMENT = '기부처첨부파일';
+
 -- FK 설정
+
+-- 기부처첨부파일
+ALTER TABLE tbl_org_file ADD FOREIGN KEY (org_code) REFERENCES tbl_org(org_code);
+
 -- 기부내역, 결제내역
 ALTER TABLE tbl_donation ADD FOREIGN KEY (member_code) REFERENCES tbl_member(member_code);
 ALTER TABLE tbl_donation ADD FOREIGN KEY (campaign_code) REFERENCES tbl_campaign_description(campaign_code);
@@ -191,5 +223,4 @@ ALTER TABLE tbl_pay ADD FOREIGN KEY (donation_code) REFERENCES tbl_donation(dona
 
 -- 캠페인첨부파일
 ALTER TABLE tbl_campaign_desc_file ADD FOREIGN KEY (campaign_code) REFERENCES tbl_campaign_description(campaign_code);
-
 

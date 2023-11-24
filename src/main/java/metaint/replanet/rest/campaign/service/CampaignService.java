@@ -60,7 +60,7 @@ public class CampaignService {
         Double overGoalBudger = Double.parseDouble(goalBudger);
 
         // 금액 체크
-        if (overGoalBudger >= 1000000000) {
+        if (overGoalBudger > 1000000000) {
             return -2;
         }
 
@@ -196,6 +196,7 @@ public class CampaignService {
         List<CampaignDescription> findCategoryByCampaignList = campaignRepository.findByCampaignCategory(category);
         return findCategoryByCampaignList;
     }
+
     // 종료 임박 순 조회 성공
     public List<CampaignDescription> findCampaignSort(Date currentDate) {
         List<CampaignDescription> findCampaignSort = campaignRepository.findCampaignSort(currentDate);
@@ -223,57 +224,73 @@ public class CampaignService {
     // 캠페인 수정
     @Transactional
     public int modifyCampaign(CampaignDescriptionDTO campaignDTO, int campaignCode, MultipartFile imageFile) {
-
         // 이미지 파일 있음 삭제
-        if (imageFile != null){
+        if (imageFile != null) {
             campaignFileRepository.deleteByCampaignCodeCampaignCode(campaignCode);
+        } else {
+            int result;
+            // update 할 엔티티 조회
+            CampaignAndFile campaign = campaignAndFileRepository.findById(campaignCode).get();
+
+            //List<CampaignDescFile> file = campaignFileRepository.findByCampaignCodeCampaignCode(campaignCode);
+            // 목표금액 , 제거
+            String goalBudger = campaignDTO.getGoalBudget().replaceAll(",", "");
+            campaignDTO.setGoalBudget(goalBudger);
+            Double overGoalBudger = Double.parseDouble(goalBudger);
+            System.out.println(imageFile + "아거 gd ");
+
+            // 금액 체크
+            if (overGoalBudger > 1000000000) {
+                result = -2;
+                return result;
+            } else {
+                System.out.println(campaignDTO + "아거 확인11좀 ");
+
+                // 현재 날짜
+                LocalDateTime startDate = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+                campaignDTO.setStartDate(startDate);
+                System.out.println(startDate + "스타트 데이트");
+                // 마감일 형변환 String =>  LocalDateTime
+                LocalDateTime endDate;
+
+                String getEndDate = campaignDTO.getEndDate();
+                System.out.println(getEndDate + "앤드데이트");
+                if (getEndDate.contains("-")) {
+                    endDate = LocalDateTime.parse(getEndDate + "T23:59:59", formatter);
+                } else {
+                    String[] dateComponents = getEndDate.split(",");
+
+                    int year = Integer.parseInt(dateComponents[0]);
+                    int month = Integer.parseInt(dateComponents[1]);
+                    int day = Integer.parseInt(dateComponents[2]);
+                    int hour = Integer.parseInt(dateComponents[3]);
+                    int minute = Integer.parseInt(dateComponents[4]);
+                    int second = Integer.parseInt(dateComponents[5]);
+
+                    endDate = LocalDateTime.of(year, month, day, hour, minute, second);
+                }
+                if (endDate.isBefore(startDate)) {
+                    result = -1;
+                    return result;
+                }
+
+                // 변환된 LocalDateTime을 Entity에 매핑
+                CampaignDescription campaignEntity = modelMapper.map(campaign, CampaignDescription.class);
+                campaignEntity.endDate(endDate).builder();
+                System.out.println(campaign + "아거 확인22좀 ");
+
+                // update를 위한 엔티티 값 수정
+                campaign = campaign.campaignTitle(campaignDTO.getCampaignTitle())
+                        .campaignContent(campaignDTO.getCampaignContent())
+                        .endDate(endDate)
+                        .campaignCategory(campaignDTO.getCampaignCategory())
+                        .goalBudget(Integer.parseInt(campaignDTO.getGoalBudget().replaceAll(",", "")))
+                        .orgName(campaignDTO.getOrgName())
+                        .orgDescription(campaignDTO.getOrgDescription())
+                        .orgTel(campaignDTO.getOrgTel()).builder();
+            }
         }
-        int result;
-        // update 할 엔티티 조회
-        CampaignAndFile campaign = campaignAndFileRepository.findById(campaignCode).get();
-
-        //List<CampaignDescFile> file = campaignFileRepository.findByCampaignCodeCampaignCode(campaignCode);
-        // 목표금액 , 제거
-        String goalBudger = campaignDTO.getGoalBudget().replaceAll(",", "");
-        campaignDTO.setGoalBudget(goalBudger);
-        Double overGoalBudger = Double.parseDouble(goalBudger);
-
-        // 금액 체크
-        if (overGoalBudger >= 1000000000) {
-            result = 2;
-            return result;
-        }
-
-        // 현재 날짜
-        LocalDateTime startDate = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-        campaignDTO.setStartDate(startDate);
-        System.out.println(startDate + "스타트 데이트");
-        // 마감일 형변환 String =>  LocalDateTime
-        String getEndDate = campaignDTO.getEndDate();
-        getEndDate.replaceAll(",","");
-        System.out.println(getEndDate);
-        LocalDateTime endDate = LocalDateTime.parse(getEndDate + "T23:59:59", formatter);
-        if (endDate.isBefore(startDate)) {
-            result = -1;
-            return result;
-        }
-
-
-        // 변환된 LocalDateTime을 Entity에 매핑
-        CampaignDescription campaignEntity = modelMapper.map(campaign, CampaignDescription.class);
-        campaignEntity.endDate(endDate).builder();
-
-        // update를 위한 엔티티 값 수정
-        campaign = campaign.campaignTitle(campaignDTO.getCampaignTitle())
-                .campaignContent(campaignDTO.getCampaignContent())
-                .endDate(LocalDateTime.parse(campaignDTO.getEndDate() + "T23:59:59"))
-                .campaignCategory(campaignDTO.getCampaignCategory())
-                .goalBudget(Integer.parseInt(campaignDTO.getGoalBudget().replaceAll(",", "")))
-                .orgName(campaignDTO.getOrgName())
-                .orgDescription(campaignDTO.getOrgDescription())
-                .orgTel(campaignDTO.getOrgTel()).builder();
-
         return 0;
     }
 
@@ -285,7 +302,7 @@ public class CampaignService {
     // 일일 모금현황 조회
     public List<TodayDonationsDTO> getTodayDonations() {
         List<Object[]> today = participationRepository.findByTodayDonation();
-        System.out.println(today+ "이거 확인좀");
+        System.out.println(today + "이거 확인좀");
 
         List<TodayDonationsDTO> list = new ArrayList<>();
         for (Object[] objects : today) {
@@ -304,7 +321,8 @@ public class CampaignService {
             System.out.println(todayDTO + "화긴");
             TodayDonationsDTO apply = todayDTO;
             list.add(apply);
-        } return list;
+        }
+        return list;
     }
 
 

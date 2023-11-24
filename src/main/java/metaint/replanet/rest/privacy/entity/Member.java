@@ -50,14 +50,14 @@ public class Member {
     @Column(name = "current_point")
     private int currentPoint;
 
-    @Column(name = "info_consent")
-    private char infoConsent;
+    @Column(name = "privacy_status")
+    private char privacyStatus;
 
     @Column(name = "resident_num")
     private String residentNum;
 
-    public Member infoConsent(char val){
-        this.infoConsent = val;
+    public Member privacyStatus(char val){
+        this.privacyStatus = val;
         return this;
     }
 
@@ -67,6 +67,6 @@ public class Member {
     }
 
     public Member builder(){
-        return new Member(memberCode, memberEmail, memberName, password, phone, joinDate, memberRole, withdraw, withdrawDate, currentPoint, infoConsent, residentNum);
+        return new Member(memberCode, memberEmail, memberName, password, phone, joinDate, memberRole, withdraw, withdrawDate, currentPoint, privacyStatus, residentNum);
     }
 }

@@ -48,3 +48,7 @@ coolsms:
   api:
     key: "NCSCXEQPTW0K6AEB"
     secret: "O6TTAGTY5UCH84C19UUL9W6QLWSHJ4KG"
+
+jasypt:
+  encryptor:
+    password: 4u5u4j2#u4h32uih4D72*+kfduffsa&%r3uQ^JHNUEY7

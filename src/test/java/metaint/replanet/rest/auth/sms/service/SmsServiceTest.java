@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 @SpringBootTest
-public class smsServiceTest {
+public class SmsServiceTest {
     @Test
     public void certifiedPhoneNumberTest() {
 
