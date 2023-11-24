@@ -35,7 +35,7 @@ public class ChatbotController {
 
         headers.setContentType(new MediaType("application","json", Charset.forName("UTF-8")));
         Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("챗봇 리스트 전체 조회", chatbotService.selectAllQuestion());
+        responseMap.put("allSupportData", chatbotService.selectAllQuestion());
 
         ResponseMessageDTO responseMessage = new ResponseMessageDTO(HttpStatus.OK, "조회성공!", responseMap);
 
@@ -50,7 +50,7 @@ public class ChatbotController {
 
         headers.setContentType(new MediaType("application","json", Charset.forName("UTF-8")));
         Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("챗봇 질문코드 단건 조회", chatbotService.selectOneAnswer(questionCode));
+        responseMap.put("oneSupportData", chatbotService.selectOneAnswer(questionCode));
 
         ResponseMessageDTO responseMessage = new ResponseMessageDTO(HttpStatus.OK, "조회성공!", responseMap);
 
