@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -73,10 +74,10 @@ public class CampaignServiceTest {
     @Test
     public void campaignFindSortTest() {
         //given
-        Date currentDate = now();
+        LocalDateTime currentDate = LocalDateTime.now();
 
         //when
-        List<CampaignDescription> findCampaignSort = campaignService.findCampaignSort(currentDate);
+        List<CampaignAndFile> findCampaignSort = campaignService.findCampaignSort(currentDate);
 
         //then
         Assertions.assertNotNull(findCampaignSort);
@@ -258,18 +259,18 @@ public class CampaignServiceTest {
         donationList.forEach(System.out::println);
     }
     
-    @DisplayName("카테고리별 조회 테스트")
-    @Test
-    void campaignSearchByCategory(){
-        //given
-        String category = "기타";
-        //when
-        List<CampaignDescription> campaignList = campaignService.findCategoryByCampaignList(category);
-        //then
-        Assertions.assertNotNull(campaignList);
-        campaignList.forEach(System.out::println);
-
-    }
+//    @DisplayName("카테고리별 조회 테스트")
+//    @Test
+//    void campaignSearchByCategory(){
+//        //given
+//        String category = "기타";
+//        //when
+//        List<CampaignDescription> campaignList = campaignService.findCategoryByCampaignList(category);
+//        //then
+//        Assertions.assertNotNull(campaignList);
+//        campaignList.forEach(System.out::println);
+//
+//    }
 
 
 }

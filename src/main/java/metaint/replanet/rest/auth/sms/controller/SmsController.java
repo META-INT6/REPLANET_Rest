@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import metaint.replanet.rest.auth.sms.service.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.HttpSessionRequiredException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.Random;
 
 @Slf4j
@@ -14,7 +16,6 @@ import java.util.Random;
 public class SmsController {
     @Autowired
     private SmsService smsService;
-    String resultStr="";
 
     @PostMapping("/users/sms")
     public String sendSMS (@RequestBody String u_phone) throws JsonProcessingException {
@@ -29,22 +30,17 @@ public class SmsController {
         log.info("[/users/sms 인증 번호 cerNum] : " + cerNum);
         smsService.smsService(u_phone, cerNum);
         return cerNum;
+
+
     }
 
-//    @GetMapping("/check/sendSMS")
-//    public @ResponseBody
-//    String sendSMS(String phoneNumber) {
-//
-//        Random rand  = new Random();
-//        String numStr = "";
-//        for(int i=0; i<4; i++) {
-//            String ran = Integer.toString(rand.nextInt(10));
-//            numStr+=ran;
-//        }
-//
-//        System.out.println("수신자 번호 : " + phoneNumber);
-//        System.out.println("인증번호 : " + numStr);
-//        smsService.certifiedPhoneNumber(phoneNumber,numStr);
-//        return numStr;
-//    }
+    @PostMapping("/users/smscheck")
+    public boolean checkSMS (HttpSession httpSession, @RequestBody String cerNum) {
+        httpSession.getAttribute(cerNum);
+        String enteredVerificationCode = "";
+        if (cerNum == enteredVerificationCode) {
+            return true;
+        } else return false;
+    }
+
 }

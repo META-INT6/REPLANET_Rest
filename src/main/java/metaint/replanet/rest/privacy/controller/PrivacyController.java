@@ -5,10 +5,7 @@ import metaint.replanet.rest.privacy.dto.MemberDTO;
 import metaint.replanet.rest.privacy.service.PrivacyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -43,5 +40,16 @@ public class PrivacyController {
             }
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("신청 처리 중 오류 발생");
+    }
+
+    @GetMapping("privacyStatus/{memberCode}")
+    public ResponseEntity<?> selectPrivacyStatus(@PathVariable int memberCode){
+
+        log.info("멤버코드 확인 : " + memberCode);
+        char privacyStatus = privacyService.selectPrivacyStatus(memberCode);
+        if(privacyStatus != 0){
+            return ResponseEntity.status(HttpStatus.OK).body(privacyStatus);
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("처리 중 서버 오류 발생");
     }
 }

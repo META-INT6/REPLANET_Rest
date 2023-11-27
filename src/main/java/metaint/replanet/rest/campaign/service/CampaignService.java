@@ -21,9 +21,9 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class CampaignService {
@@ -137,24 +137,6 @@ public class CampaignService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        /*try {
-            // 폴더 없으면 폴더 생성
-            File directory = new File(IMAGE_DIR);
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
-            imageFile.transferTo(new File(IMAGE_URL + "/" + fileSaveName));
-
-            System.out.println(campaignFileDTO + "얜 켐펜팔");
-            CampaignDescFile campaignDescFile = modelMapper.map(campaignFileDTO, CampaignDescFile.class);
-            campaignDescFile.fileOriginPath("이게 필요할라나?");
-            campaignFileRepository.save(campaignDescFile);
-            result = 1;
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("파일이 읍서");
-        }*/
-
 
         return (result > 0) ? "성공" : "실패";
     }
@@ -164,22 +146,13 @@ public class CampaignService {
     public List<CampaignAndFile> findCampaignList() {
         LocalDateTime currentDate = LocalDateTime.now();
         List<CampaignAndFile> campaignList = campaignAndFileRepository.findByEndDateAfter(currentDate);
-        //List<CampaignAndFile> campaignList1 = campaignAndFileRepository.findByEndDateAfter1(currentDate);
-
-
-        System.out.println(campaignList);
         return campaignList;
     }
 
     // 전체 종료 조회 성공
     public List<CampaignAndFile> findCampaignListDone() {
         LocalDateTime currentDate = LocalDateTime.now();
-
         List<CampaignAndFile> campaignList = campaignAndFileRepository.findByEndDateBefore(currentDate);
-
-        //List<CampaignDescFile> campaignList = campaignFileRepository.findByEndDateBefore(currentDate);
-
-        System.out.println(campaignList + "앤드조회");
         return campaignList;
     }
 
@@ -190,16 +163,17 @@ public class CampaignService {
         return findCampaign;
     }
 
-    // 카테고리별 리스트 조회
-    public List<CampaignDescription> findCategoryByCampaignList(String category) {
-        System.out.println(category + "카테고리 확인 1111");
-        List<CampaignDescription> findCategoryByCampaignList = campaignRepository.findByCampaignCategory(category);
-        return findCategoryByCampaignList;
-    }
+//    // 카테고리별 리스트 조회
+//    public List<CampaignAndFile>  findCategoryByCampaignList(String category) {
+//        System.out.println(category + "카테고리 확인 1111");
+//        List<CampaignDescription> findCategoryByCampaignList = campaignRepository.findByCampaignCategory(category);
+//        return findCategoryByCampaignList;
+//    }
 
     // 종료 임박 순 조회 성공
-    public List<CampaignDescription> findCampaignSort(Date currentDate) {
-        List<CampaignDescription> findCampaignSort = campaignRepository.findCampaignSort(currentDate);
+    public List<CampaignAndFile> findCampaignSort(LocalDateTime currentDate) {
+        List<CampaignAndFile> findCampaignSort = campaignAndFileRepository.findCampaignSort(currentDate);
+        System.out.println(findCampaignSort + "잘받아오는지 화긴해보자");
 
         return findCampaignSort;
     }

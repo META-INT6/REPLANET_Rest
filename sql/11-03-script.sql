@@ -224,3 +224,6 @@ ALTER TABLE tbl_pay ADD FOREIGN KEY (donation_code) REFERENCES tbl_donation(dona
 -- 캠페인첨부파일
 ALTER TABLE tbl_campaign_desc_file ADD FOREIGN KEY (campaign_code) REFERENCES tbl_campaign_description(campaign_code);
 
+-- 북마크
+ALTER TABLE tbl_bookmark ADD FOREIGN KEY (campaign_code) REFERENCES tbl_campaign_description(campaign_code);
+ALTER TABLE tbl_bookmark ADD FOREIGN KEY (member_code) REFERENCES tbl_member(member_code);

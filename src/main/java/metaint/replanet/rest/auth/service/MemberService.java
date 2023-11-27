@@ -37,4 +37,6 @@ public class MemberService {
         return memberRepository.existsByEmail(email);
 
     }
+
+
 }

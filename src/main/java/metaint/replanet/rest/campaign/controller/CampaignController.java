@@ -11,6 +11,7 @@ import metaint.replanet.rest.campaign.entity.Pay;
 import metaint.replanet.rest.campaign.service.CampaignService;
 import metaint.replanet.rest.point.dto.PointFileDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +22,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import static java.time.LocalTime.now;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
@@ -39,16 +43,15 @@ public class CampaignController {
         this.campaignService = campaignService;
     }
 
-    // 진행중 조회 
+    // 진행 & 종료 조회
     @GetMapping()
-    public List<CampaignAndFile> main() {
+    public List<CampaignAndFile> main(@RequestParam String status) {
+        if(status.equals("ing")){
         return campaignService.findCampaignList();
-    }
-
-    // 종료 조회
-    @GetMapping("done")
-    public List<CampaignAndFile> campaignListDone() {
-        return campaignService.findCampaignListDone();
+        } else if (status.equals("done")) {
+            return campaignService.findCampaignListDone();
+        }
+        return null;
     }
 
     // 상세 조회
@@ -64,11 +67,17 @@ public class CampaignController {
         return campaignService.findparticipationList(campaignCode);
     }
 
-    // 카테고리별 조회
+    // 카테고리별 & 기간별 캠페인 조회
     @GetMapping("/category")
-    public List<CampaignDescription> findCategoryByCampaignList (@Parameter String category){
-        System.out.println("카테고리 잘 받아옴?");
-        return campaignService.findCategoryByCampaignList(category);
+    public List<CampaignAndFile> findCategoryByCampaignList (@RequestParam String selectedValue){
+        LocalDateTime currentDate = LocalDateTime.now();
+
+        if(selectedValue.equals("latest")){// 최신순 조회
+
+        } else if (selectedValue.equals("earliest")) { // 마감순 조회
+            return campaignService.findCampaignSort(currentDate);
+        }
+        return null;
     }
 
 
