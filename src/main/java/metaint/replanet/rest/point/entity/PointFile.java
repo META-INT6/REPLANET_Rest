@@ -1,17 +1,8 @@
 package metaint.replanet.rest.point.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
 import javax.persistence.*;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@ToString
-@Entity(name = "point_file_entity")
+@Entity
 @Table(name = "tbl_point_file")
 public class PointFile {
 
@@ -34,4 +25,18 @@ public class PointFile {
 
     @Column(name = "application_code")
     private int applicationCode;
+
+    public PointFile() {}
+
+    @Override
+    public String toString() {
+        return "PointFile{" +
+                "fileCode=" + fileCode +
+                ", fileOriginName='" + fileOriginName + '\'' +
+                ", filePath='" + filePath + '\'' +
+                ", fileExtension='" + fileExtension + '\'' +
+                ", fileSaveName='" + fileSaveName + '\'' +
+                ", applicationCode=" + applicationCode +
+                '}';
+    }
 }
