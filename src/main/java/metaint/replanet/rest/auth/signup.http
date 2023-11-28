@@ -9,22 +9,13 @@
 #  "memberName": "김민주"
 #}
 
-//로그인
-#POST http://localhost:8001/auth/login
-#Content-Type: application/json
-#
-#{
-#  "email": "admin",
-#  "password": "1234"
-#}
 
-GET http://localhost:8001/users/sms
+// 로그인
+POST http://localhost:8001/auth/login
 Content-Type: application/json
 
 {
-  "to": "u_phone",
-  "from": "01046668627",
-  "type": "SMS",
-  "text": "cerNum",
-  "app_version": "1"
+  "email": "aaa",
+  "password": "1234"
 }
+
