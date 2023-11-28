@@ -1,6 +1,0 @@
-POST http://localhost:8001/users/smscheck/5945
-Content-Type: application/json
-
-{
-  "cerNum": "5945"
-}
