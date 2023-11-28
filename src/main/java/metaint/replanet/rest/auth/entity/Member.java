@@ -9,7 +9,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @DynamicInsert
@@ -23,10 +22,10 @@ public class Member {
     @Id
     @Column(name = "member_code")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long memberCode;
 
     @NotNull
-    @Column(name = "member_id")
+    @Column(name = "member_email", unique=true)
     private String email;
 
     @NotNull
@@ -64,9 +63,19 @@ public class Member {
     @Column(name = "current_point")
     private int currentPoint;
 
+    @NotNull
+    @ColumnDefault("replanet")
+    @Column(name = "provider")
+    private String provider;
+
+    @ColumnDefault("null")
+    @Column(name = "provider_id")
+    private String providerId;
+
     @Builder
-    public Member(Long id, String email, String memberName, String password, String phone, Date joinDate, MemberRole memberRole, String withdraw, Date withdrawDate, int currentPoint) {
-        this.id = id;
+    public Member(Long memberCode, String email, String memberName, String password, String phone, Date joinDate, MemberRole memberRole, String withdraw, Date withdrawDate, int currentPoint,
+                  String provider, String providerId) {
+        this.memberCode = memberCode;
         this.email = email;
         this.memberName = memberName;
         this.password = password;
@@ -76,5 +85,18 @@ public class Member {
         this.withdraw = withdraw;
         this.withdrawDate = withdrawDate;
         this.currentPoint = currentPoint;
+        this.provider = provider;
+        this.providerId = providerId;
+    }
+
+    public Member(String email, String memberName, MemberRole memberRole) {
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

@@ -2,7 +2,7 @@ package metaint.replanet.rest.chart.entity;
 
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity(name = "tblCampaignDescription")
 @Table(name = "tbl_campaign_description")
@@ -17,9 +17,9 @@ public class CampaignDescription {
     @Column(name = "campaign_content")
     private String campaignContent;
     @Column(name = "start_date")
-    private LocalDate startDate;
+    private LocalDateTime startDate;
     @Column(name = "end_date")
-    private LocalDate endDate;
+    private LocalDateTime endDate;
     @Column(name = "campaign_category")
     private String campaignCategory;
     @Column(name = "current_budget")
@@ -33,60 +33,9 @@ public class CampaignDescription {
     @Column(name = "org_tel")
     private String orgTel;
 
-    /* builder Pattern */
-    public CampaignDescription campaignCode(int val) {
-        campaignCode = val;
-        return this;
-    }
-    public CampaignDescription campaignTitle(String val) {
-        campaignTitle = val;
-        return this;
-    }
-    public CampaignDescription campaignContent(String val) {
-        campaignContent = val;
-        return this;
-    }
-    public CampaignDescription startDate(LocalDate val) {
-        startDate = val;
-        return this;
-    }
-    public CampaignDescription endDate(LocalDate val) {
-        endDate = val;
-        return this;
-    }
-    public CampaignDescription campaignCategory(String val) {
-        campaignCategory = val;
-        return this;
-    }
-    public CampaignDescription currentBudget(int val) {
-        currentBudget = val;
-        return this;
-    }
-    public CampaignDescription goalBudget(int val) {
-        goalBudget = val;
-        return this;
-    }
-    public CampaignDescription orgName(String val) {
-        orgName = val;
-        return this;
-    }
-    public CampaignDescription orgDescription(String val) {
-        orgDescription = val;
-        return this;
-    }
-    public CampaignDescription orgTel(String val) {
-        orgTel = val;
-        return this;
-    }
-
-    public CampaignDescription builder() {
-        return new CampaignDescription(campaignCode, campaignTitle, campaignContent, startDate, endDate, campaignCategory, currentBudget, goalBudget, orgName, orgDescription, orgTel);
-    }
-    /* -------------builder Pattern end---------------- */
-
     protected CampaignDescription() {}
 
-    public CampaignDescription(int campaignCode, String campaignTitle, String campaignContent, LocalDate startDate, LocalDate endDate, String campaignCategory, int currentBudget, int goalBudget, String orgName, String orgDescription, String orgTel) {
+    public CampaignDescription(int campaignCode, String campaignTitle, String campaignContent, LocalDateTime startDate, LocalDateTime endDate, String campaignCategory, int currentBudget, int goalBudget, String orgName, String orgDescription, String orgTel) {
         this.campaignCode = campaignCode;
         this.campaignTitle = campaignTitle;
         this.campaignContent = campaignContent;
@@ -112,11 +61,11 @@ public class CampaignDescription {
         return campaignContent;
     }
 
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public LocalDate getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 

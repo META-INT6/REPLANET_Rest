@@ -2,6 +2,19 @@ server:
   port: 8001
 
 spring:
+  redis:
+    host: localhost
+    port: 8001
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    username: replanetorg@gmail.com
+    password: lsrb grgb qvqz rnuf
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+      mail.smtp.ssl.trust: smtp.gmail.com
+      mail.smtp.starttls.enable: true
   jpa:
     hibernate:
       ddl-auto: none
@@ -21,7 +34,34 @@ spring:
       org.hibernate.SQL: debug
       org.hibernate.type: trace
 
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: 5a90ac83e3e59ba52ef0c472bc65e3e0
+            client-secret: TcYhrxzWSY1frhLvSUpKcYAwDd5pUw6hJ9nTofayKEFBluK64yQnrsJlffIKPXVaAAABi7KTyJAicpf3YNJZ6g
+            scope:
+              - account_email
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8001/login/oauth2/code/kakao
+            client-name: Kakao
+            client-authentication-method: POST
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
 jwt:
   key: dkjkla23djflka123djflk23420394rjglasdkgljdl
   time: 86400000
   secret: c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWppd29vbi1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3QtdHV0b3JpYWwK
+coolsms:
+  api:
+    key: "NCSCXEQPTW0K6AEB"
+    secret: "O6TTAGTY5UCH84C19UUL9W6QLWSHJ4KG"
+
+jasypt:
+  encryptor:
+    password: 4u5u4j2#u4h32uih4D72*+kfduffsa&%r3uQ^JHNUEY7

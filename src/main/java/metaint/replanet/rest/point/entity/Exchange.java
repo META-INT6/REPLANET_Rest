@@ -1,9 +1,20 @@
 package metaint.replanet.rest.point.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.hibernate.annotations.DynamicInsert;
+
 import javax.persistence.*;
 import java.util.Date;
 
-@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@ToString
+@DynamicInsert
+@Entity(name = "point_exchange_entity")
 @Table(name = "tbl_point_exchange")
 public class Exchange {
 
@@ -21,6 +32,9 @@ public class Exchange {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "processing_date")
+    private Date processingDate;
+
     @Column(name = "return_detail")
     private String returnDetail;
 
@@ -30,18 +44,27 @@ public class Exchange {
     @Column(name = "member_code")
     private int memberCode;
 
-    public Exchange(){}
+    public Exchange status(String val){
+        this.status = val;
+        return this;
+    }
 
-    @Override
-    public String toString() {
-        return "Exchange{" +
-                "exchangeCode=" + exchangeCode +
-                ", exchangeDate=" + exchangeDate +
-                ", title='" + title + '\'' +
-                ", status='" + status + '\'' +
-                ", returnDetail='" + returnDetail + '\'' +
-                ", points=" + points +
-                ", memberCode=" + memberCode +
-                '}';
+    public Exchange processingDate(Date val){
+        this.processingDate = val;
+        return this;
+    }
+
+    public Exchange returnDetail(String val){
+        this.returnDetail = val;
+        return this;
+    }
+
+    public Exchange points(int val){
+        this.points = val;
+        return this;
+    }
+
+    public Exchange builder(){
+        return new Exchange(exchangeCode, exchangeDate, title, status, processingDate, returnDetail, points, memberCode);
     }
 }

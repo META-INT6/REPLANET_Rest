@@ -1,0 +1,6 @@
+POST http://localhost:8001/auth/emailcheck/vaguewords@ddd.ddd
+Content-Type: application/json
+
+{
+  "email": "vaguewords@ddd.ddd"
+}

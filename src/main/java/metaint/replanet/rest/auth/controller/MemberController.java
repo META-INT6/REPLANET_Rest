@@ -1,28 +1,39 @@
 package metaint.replanet.rest.auth.controller;
 
+import lombok.extern.slf4j.Slf4j;
+import metaint.replanet.rest.auth.dto.ChangePasswordRequestDto;
+import metaint.replanet.rest.auth.dto.MemberRequestDto;
 import metaint.replanet.rest.auth.dto.MemberResponseDto;
 import metaint.replanet.rest.auth.service.MemberService;
 import metaint.replanet.rest.auth.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/member")
+@RequestMapping("/auth")
 public class MemberController {
+
     private final MemberService memberService;
 
-    @GetMapping("/me")
-    public ResponseEntity<MemberResponseDto> findMemberInfoById() {
-        return ResponseEntity.ok(memberService.findMemberInfoById(SecurityUtil.getCurrentMemberId()));
+    @PostMapping("/password")
+    public ResponseEntity<MemberResponseDto> setMemberPassword(@RequestBody ChangePasswordRequestDto request) {
+        return ResponseEntity.ok(memberService.changeMemberPassword(request.getExPassword(), request.getNewPassword()));
     }
 
-    @GetMapping("/{email}")
-    public ResponseEntity<MemberResponseDto> findMemberInfoByEmail(@PathVariable String email) {
-        return ResponseEntity.ok(memberService.findMemberInfoByEmail(email));
+
+    @PostMapping("/emailcheck/{email}")
+    public ResponseEntity<?> checkEmailDuplication(@PathVariable String email) throws Exception {
+        System.out.println(email);
+
+        if (memberService.existsByEmail(email) == true) {
+            log.info(email + "은(는) 이미 사용 중인 이메일입니다.");
+            throw new Exception("이미 사용 중인 이메일입니다.");
+        } else {
+            return ResponseEntity.ok(email + "은(는) 사용 가능한 이메일입니다.");
+        }
     }
+
 }
