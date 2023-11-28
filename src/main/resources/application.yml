@@ -11,9 +11,9 @@ spring:
         show_sql: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql.coffit.today:3306/replanet
-    username: HIkdt6
-    password: HIkdt6
+    url: jdbc:mysql://localhost:3306/replanet
+    username: root
+    password: 74320305
 
   logging:
     level:
@@ -21,30 +21,7 @@ spring:
       org.hibernate.SQL: debug
       org.hibernate.type: trace
 
-  security:
-    oauth2:
-      client:
-        registration:
-          kakao:
-            client-id: 5a90ac83e3e59ba52ef0c472bc65e3e0
-            client-secret: TcYhrxzWSY1frhLvSUpKcYAwDd5pUw6hJ9nTofayKEFBluK64yQnrsJlffIKPXVaAAABi7KTyJAicpf3YNJZ6g
-            scope:
-              - account_email
-            authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8001/login/oauth2/code/kakao
-            client-name: Kakao
-            client-authentication-method: POST
-        provider:
-          kakao:
-            authorization-uri: https://kauth.kakao.com/oauth/authorize
-            token-uri: https://kauth.kakao.com/oauth/token
-            user-info-uri: https://kapi.kakao.com/v2/user/me
-            user-name-attribute: id
 jwt:
   key: dkjkla23djflka123djflk23420394rjglasdkgljdl
   time: 86400000
   secret: c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWppd29vbi1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3QtdHV0b3JpYWwK
-coolsms:
-  api:
-    key: "NCSCXEQPTW0K6AEB"
-    secret: "O6TTAGTY5UCH84C19UUL9W6QLWSHJ4KG"

@@ -1,35 +1,28 @@
 package metaint.replanet.rest.auth.controller;
 
-import metaint.replanet.rest.auth.dto.ChangePasswordRequestDto;
 import metaint.replanet.rest.auth.dto.MemberResponseDto;
 import metaint.replanet.rest.auth.service.MemberService;
 import metaint.replanet.rest.auth.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/member")
 public class MemberController {
-
     private final MemberService memberService;
 
-    @PostMapping("/password")
-    public ResponseEntity<MemberResponseDto> setMemberPassword(@RequestBody ChangePasswordRequestDto request) {
-        return ResponseEntity.ok(memberService.changeMemberPassword(request.getExPassword(), request.getNewPassword()));
+    @GetMapping("/me")
+    public ResponseEntity<MemberResponseDto> findMemberInfoById() {
+        return ResponseEntity.ok(memberService.findMemberInfoById(SecurityUtil.getCurrentMemberId()));
     }
 
-
-    @GetMapping("/emailcheck")
-    public ResponseEntity<?> checkEmailDuplication(@RequestParam(value = "member_email") String email) throws Exception {
-        System.out.println(email);
-
-        if (memberService.existsByEmail(email) == true) {
-            throw new Exception("이미 사용중인 이메일입니다.");
-        } else {
-            return ResponseEntity.ok("사용 가능한 이메일입니다.");
-        }
+    @GetMapping("/{email}")
+    public ResponseEntity<MemberResponseDto> findMemberInfoByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(memberService.findMemberInfoByEmail(email));
     }
-
 }

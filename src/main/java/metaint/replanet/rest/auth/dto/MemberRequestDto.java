@@ -5,25 +5,17 @@ import metaint.replanet.rest.auth.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberRequestDto {
 
-
     private String email;
-
     private String password;
-
     private String memberName;
-
     private String phone;
 
 
