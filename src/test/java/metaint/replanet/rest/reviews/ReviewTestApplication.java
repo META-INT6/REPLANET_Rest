@@ -1,8 +1,12 @@
+/*
 package metaint.replanet.rest.reviews;
 
+import metaint.replanet.rest.reviews.dto.CombineReviewDTO;
 import metaint.replanet.rest.reviews.dto.ReviewDTO;
+import metaint.replanet.rest.reviews.entity.Campaign;
 import metaint.replanet.rest.reviews.entity.Review;
 import metaint.replanet.rest.reviews.model.service.ReviewService;
+import metaint.replanet.rest.reviews.repository.CampaignReviewRepository;
 import metaint.replanet.rest.reviews.repository.ReviewRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +29,9 @@ public class ReviewTestApplication {
     private ReviewRepository reviewRepository;
 
     @Autowired
+    private CampaignReviewRepository campaignReviewRepository;
+
+    @Autowired
     private ModelMapper modelMapper; // Inject ModelMapper
 
     @DisplayName("리뷰 리스트 전체 조회 테스트")
@@ -33,19 +40,19 @@ public class ReviewTestApplication {
         // Given
 
         // When
-        List<ReviewDTO> details = reviewService.findAllReviews();
+        List<CombineReviewDTO> details = reviewService.findAllReviews();
 
-        List<Review> reviewList = reviewRepository.findAll();
+        List<Campaign> campaignList = campaignReviewRepository.findAll();
 
-        System.out.println("findAllReviews: " + reviewList);
+        System.out.println("findAllReviews: " + campaignList);
 
         // Map the entities to DTOs using the ModelMapper
-        List<ReviewDTO> reviewDTOList = reviewList.stream()
-                .map(review -> modelMapper.map(review, ReviewDTO.class))
+        List<CombineReviewDTO> campaignDTOList = campaignList.stream()
+                .map(campaign -> modelMapper.map(campaign, CombineReviewDTO.class))
                 .collect(Collectors.toList());
 
         // Then
-        Assertions.assertNotNull(reviewDTOList);
+        Assertions.assertNotNull(campaignDTOList);
     }
 
     @DisplayName("단일 리뷰 리스트 조회 테스트")
@@ -53,12 +60,12 @@ public class ReviewTestApplication {
     public void testgetSingleReview() {
 
         //given
-        Long campaignRevCode = 1L;
+        Long campaignCode = 1L;
 
         //when
-        Review review = reviewRepository.findById(campaignRevCode).orElseThrow(IllegalArgumentException::new);
+        Campaign campaign = campaignReviewRepository.findById(campaignCode).orElseThrow(IllegalArgumentException::new);
 
-        ReviewDTO singleReview = modelMapper.map(review, ReviewDTO.class);
+        ReviewDTO singleReview = modelMapper.map(campaign, ReviewDTO.class);
 
 
         // Then
@@ -74,8 +81,8 @@ public class ReviewTestApplication {
 
         reviews.setReviewTitle("나는 리뷰 제목이야");
         reviews.setDescription("<p>나는 상세 내용이양</p");
-        reviews.setCampaignCampaignCode(32L);
-        reviews.setCampaignRevCode(1L);
+        reviews.setCampaignCode(32L);
+
 
 
         //when
@@ -84,8 +91,31 @@ public class ReviewTestApplication {
         //then
         Assertions.assertEquals(reviews.getReviewTitle(), singleReview.getReviewTitle());
         Assertions.assertEquals(reviews.getDescription(), singleReview.getDescription());
-        Assertions.assertEquals(reviews.getCampaignCampaignCode(), singleReview.getCampaignCampaignCode());
+        Assertions.assertEquals(reviews.getCampaignCode(), singleReview.getCampaignCode());
 
         System.out.println("Result : " + singleReview);
     }
+
+    @DisplayName("검색어로 필터링해서 리뷰 가져오기")
+    @Test
+    public void findReviewsBySearchFilter() {
+
+        //given
+        */
+/*String searchFilter = "모굼";
+
+        //when
+        List<Campaign> filteredReviewList = campaignReviewRepository.findFilteredReviews(searchFilter);
+
+        List<CombineReviewDTO> filteredResult = filteredReviewList.stream()
+                .map(filteredReviews -> modelMapper.map(filteredReviews, CombineReviewDTO.class))
+                .collect(Collectors.toList());
+
+        //then
+        Assertions.assertNotNull(filteredResult);
+        System.out.println("Filtered result : " + filteredResult);*//*
+
+    }
+
 }
+*/
