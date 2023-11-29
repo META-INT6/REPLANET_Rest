@@ -4,7 +4,6 @@ import javax.persistence.Column;
 import java.time.LocalDate;
 
 public class CampaignDescriptionDTO {
-
     private int campaignCode;
     private String campaignTitle;
     private String campaignContent;

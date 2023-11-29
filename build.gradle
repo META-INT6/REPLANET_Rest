@@ -24,8 +24,6 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    implementation 'org.modelmapper:modelmapper:3.1.1'
-
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.security:spring-security-test'
@@ -33,6 +31,26 @@ dependencies {
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
+
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.7.17'
+
+
+    implementation 'org.modelmapper:modelmapper:3.1.1'
+    //implementation 'net.nurigo:sdk:4.2.7'
+    // https://mvnrepository.com/artifact/net.nurigo/javaSDK
+    implementation 'net.nurigo:javaSDK:2.2'
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
+    implementation 'com.twilio.sdk:twilio:9.9.1'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
+
 }
 
 tasks.named('test') {
